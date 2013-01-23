@@ -29,19 +29,14 @@ void decrypt ( int key );
 	@param k the encryption key
 	@return the encrypted character
 */
-char decrypt(char ch, int k)
+void decrypt(int key)
 {
-	if ( isupper(ch) )
-		return (ch - 'A' + k) % 26 + 'A';
-	
-	if ( islower(ch) )
-		return (ch - 'a' + k) % 26 + 'a';
-	
-	return ch;
 }
 
 int main(int argc, char* argv[])
 {  
+
+    char ch;
     /*fin encryted file fout decrypted file*/
 	FILE *fin, *fout;
 	
