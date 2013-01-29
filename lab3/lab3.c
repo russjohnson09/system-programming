@@ -41,20 +41,22 @@ int main ()
 
     begin2 = clock();
 
-	float * list;
-	list = (float*) malloc (MaxSize * sizeof (float));
+	int * list;
+	list = (int*) malloc (MaxSize * sizeof (int));
 	
 	for ( i = 0; i < MaxSize; i++ )
-		list[i] = MaxSize-i;
+        *(list+i) = MaxSize-i;
 
-	for (i=0; i<MaxSize-1; i++)		// bubble sort data in the array
-		for (j=MaxSize-1; j>i; j--)
-			if (list[j-1] > list[j])
+	for (i=0; i<MaxSize-1; i++) {
+		for (j=MaxSize-1; j>i; j--) {
+			if (*(list + (j-1)) > *(list + j))
 			{
-				temp = list[j-1];
-				list[j-1] = list[j];
-				list[j] = temp;
+				temp = *(list + (j-1));
+				*(list + (j-1)) = *(list + j);
+				*(list + j) = temp;
 			}
+        }
+    }
 
 
 	free(list);
