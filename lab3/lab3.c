@@ -41,6 +41,9 @@ int main ()
 
     begin2 = clock();
 
+    int * temp2;
+    int * temp3;
+    int * temp4;
 	int * list;
 	list = (int*) malloc (MaxSize * sizeof (int));
 	
@@ -51,9 +54,9 @@ int main ()
 		for (j=MaxSize-1; j>i; j--) {
 			if (*(list + (j-1)) > *(list + j))
 			{
-				temp = *(list + (j-1));
+				*temp2 = *(list + (j-1));
 				*(list + (j-1)) = *(list + j);
-				*(list + j) = temp;
+				*(list + j) = *temp2;
 			}
         }
     }
