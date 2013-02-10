@@ -7,55 +7,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void readFreq(float*);
-void calcFreq(float*);
-int findKey(float*, float*);
+void readFreq(float given[]);
+void calcFreq(float found[]);
+int findKey(float given[], float found[]);
 void decrypt(int key);
+
+FILE *fin;
 
 int main(int argc, char* argv[])
 {
 
     char ch;
-	float *given = (float*) malloc (26 * sizeof (float));
-	float *found = (float*) malloc (26 * sizeof (float));
+	float given[26];
+	float found[26];
     float f;
-    int i, count, key, k, m;
-    float sum = 0;
-    float min = 0;
+    int i, count, key;
     float tmp;
-    key = 0;
+
+    fin = fopen(argv[1], "r");
 
     readFreq(given);
+    printf("1");
     calcFreq(found);
+        printf("1");
+    key = findKey(given, found);
 
-    //find key
-    for (i=0;i<26;i++) {
-        tmp = *(given+i)-*(found+i);
-        min += (tmp<0)? -tmp:tmp;
-    }
-
-    k = 1;
-    for (k=1;k<26;k++) {
-        sum = 0;
-        for (i=0;i<26;i++) {
-            tmp = *(given+(i+k)%26)-*(found+i);
-            sum += (tmp<0)? -tmp:tmp;
-        }
-
-        if (sum < min) {
-            min = sum;
-            key = k;
-        }
-        sum = 0;
-    }
-
-
-    while (scanf("%c", &ch) != EOF) {
-        printf("%c",ch);
-    }
+    printf("1");
     
 
-    while (scanf("%c", &ch) != EOF) {
+    rewind(fin);
+    while (fscanf(fin,"%c", &ch) != EOF) {
         if (isalpha(ch)){
             if (islower(ch))
                 printf("%c",((ch-'a'+key)%26)+'a');
@@ -69,33 +50,60 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-void readFreq(float* given) {
+int findKey(float given[], float found[]) {
+    float sum = 0;
+    float min = 0;
+    int key,k,i;
+    float tmp;
+    for (i=0;i<26;i++) {
+        tmp = given[i]-found[i];
+        min += (tmp<0)? -tmp:tmp;
+    }
+
+    k = 1;
+    for (k=1;k<26;k++) {
+        sum = 0;
+        for (i=0;i<26;i++) {
+            tmp = given[(i+k)%26]-found[i];
+            sum += (tmp<0)? -tmp:tmp;
+        }
+
+        if (sum < min) {
+            min = sum;
+            key = k;
+        }
+        sum = 0;
+    }
+    return key;
+}
+
+void readFreq(float given[]) {
     float f;
     char ch;
     FILE* letFreq = fopen("LetFreq.txt", "r");
     int i = 0;
     while (fscanf(letFreq, "%c %f\n", &ch, &f) != EOF) {
-        *(given+i) = f;
+        given[i] = f;
         i++;
     }
 }
 
-void calcFreq(float* found){
+void calcFreq(float found[]){
     char ch;
     int count = 0;
     int i;
-    while (scanf("%c", &ch) != EOF) {
+    while (fscanf(fin,"%c", &ch) != EOF) {
         if (isalpha(ch)) {
             count++;
             if (islower(ch)) {
-                (*(found+(ch-'a')))++;
+                found[ch-'a']++;
             }
             else {
-                (*(found+(ch-'A')))++;
+                found[ch-'A']++;
             }
         }
     }
     for (i=0;i<26;i++){
-        *(found+i) /= count;
+        found[i] /= count;
     }
 }
