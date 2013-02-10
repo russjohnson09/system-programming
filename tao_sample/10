@@ -1,0 +1,1 @@
+If you are compiling in C99, you could #include <stdbool.h> and use bool, true, and false. bool would be a macro for _Bool, which itself is a standard type guaranteed to hold 0 or 1, and true and false are macros for 1 and 0 respectively.

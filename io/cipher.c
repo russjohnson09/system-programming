@@ -12,42 +12,68 @@ void calcFreq(float found[]);
 int findKey(float given[], float found[]);
 void decrypt(int key);
 
+void print(int);
+
 FILE *fin;
+FILE *fout;
+int key;
 
 int main(int argc, char* argv[])
 {
-
-    char ch;
 	float given[26];
 	float found[26];
     float f;
-    int i, count, key;
+    int i, count;
     float tmp;
 
     fin = fopen(argv[1], "r");
+    fout = fopen(argv[2], "w");
+
+    if (fin ==  NULL) {
+	    printf("Please enter file to decrypt and optionally an output file\n");
+        printf("if no output file is given, decryption will print to stdout.\n");
+	    exit(1);
+	}
 
     readFreq(given);
-    printf("1");
     calcFreq(found);
-        printf("1");
-    key = findKey(given, found);
-
-    printf("1");
-    
+    key = findKey(given, found);  
 
     rewind(fin);
-    while (fscanf(fin,"%c", &ch) != EOF) {
-        if (isalpha(ch)){
-            if (islower(ch))
-                printf("%c",((ch-'a'+key)%26)+'a');
-            else
-                printf("%c",((ch-'A'+key)%26)+'A');
-        }
-        else
-            printf("%c",ch);
-    }
+    
+    print(fout==NULL);
 
 	return 0;
+}
+
+void print(int b) {
+    char ch;
+    if (b) {
+        while (fscanf(fin,"%c", &ch) != EOF) {
+            if (isalpha(ch)){
+                if (islower(ch))
+                    printf("%c",((ch-'a'+key)%26)+'a');
+                else
+                    printf("%c",((ch-'A'+key)%26)+'A');
+            }
+            else
+                printf("%c",ch);
+        }
+    }
+
+    else {
+        while (fscanf(fin,"%c", &ch) != EOF) {
+            if (isalpha(ch)){
+                if (islower(ch))
+                    fprintf(fout,"%c",((ch-'a'+key)%26)+'a');
+                else
+                    fprintf(fout,"%c",((ch-'A'+key)%26)+'A');
+            }
+            else
+                fprintf(fout,"%c",ch);
+        }
+    }
+
 }
 
 int findKey(float given[], float found[]) {
